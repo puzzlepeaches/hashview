@@ -198,7 +198,7 @@ def ensure_tasks(db):
         task = Tasks(
             name          = 'Rockyou Wordlist',
             owner_id      = '1',
-            wl_id         = '1',
+            wl_id         = '2',
             rule_id       = None,
             hc_attackmode = 'dictionary',
         )
@@ -207,7 +207,7 @@ def ensure_tasks(db):
         task = Tasks(
             name          = 'Rockyou Wordlist + Best64 Rules',
             owner_id      = '1',
-            wl_id         = '1',
+            wl_id         = '2',
             rule_id       = '1',
             hc_attackmode = 'dictionary',
         )
@@ -346,7 +346,7 @@ def cli(args) -> int:
 
             ensure_admin_account(db, bcrypt)
             ensure_settings(db)
-            ensure_dynamic_wordlist(db)
+            ensure_dynamic_wordlist(db)            
             ensure_static_wordlist(db)
             ensure_rules(db)
             ensure_tasks(db)

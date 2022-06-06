@@ -46,11 +46,6 @@ def send_email(user, subject, message):
     msg.body = message
     current_app.extensions['mail'].send(msg)
 
-def send_html_email(user, subject, message):
-    msg = Message(subject, recipients=[user.email_address])
-    msg.html = message
-    current_app.extensions['mail'].send(msg)
-
 def send_pushover(user, subject, message):
     if not user.pushover_user_key:
         current_app.logger.info('SendPushover is Complete with Failure(User Key not Configured).')
@@ -286,7 +281,7 @@ def update_job_task_status(jobtask_id, status):
             cracked_cnt = db.session.query(Hashes).outerjoin(HashfileHashes, Hashes.id==HashfileHashes.hash_id).filter(Hashes.cracked == '1').filter(HashfileHashes.hashfile_id==job.hashfile_id).count()
             uncracked_cnt = db.session.query(Hashes).outerjoin(HashfileHashes, Hashes.id==HashfileHashes.hash_id).filter(Hashes.cracked == '0').filter(HashfileHashes.hashfile_id==job.hashfile_id).count()
             if job_notification.method == 'email':
-                send_html_email(user, 'Hashview Job: "' + job.name + '" Has Completed!', 'Your job has completed. It ran for ' + getTimeFormat(durration) + ' and resulted in a total of ' + str(cracked_cnt) + ' out of ' + str(cracked_cnt+uncracked_cnt) + ' hashes being recovered! <br /><br /> <a href="' + url_for('analytics.get_analytics',customer_id=job.customer_id,hashfile_id=job.hashfile_id, _external=True) + '">View Analytics</a>')
+                send_email(user, 'Hashview Job: "' + job.name + '" Has Completed!', 'Your job has completed. It ran for ' + getTimeFormat(durration) + ' and resulted in a total of ' + str(cracked_cnt) + ' out of ' + str(cracked_cnt+uncracked_cnt) + ' hashes being recovered! <br /><br /> <a href="' + url_for('analytics.get_analytics',customer_id=job.customer_id,hashfile_id=job.hashfile_id, _external=True) + '">View Analytics</a>')
             elif job_notification.method == 'push':
                 if user.pushover_user_key and user.pushover_app_id:
                     send_pushover(user, 'Message from Hashview', 'Hashview Job: "' + job.name + '" Has Completed!')
